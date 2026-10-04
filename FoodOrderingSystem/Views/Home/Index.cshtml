@@ -1,0 +1,339 @@
+﻿@model List<FoodItem>
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- Hero Section -->
+<section class="bg-dark text-white position-relative overflow-hidden">
+    <div class="container py-5">
+        <div class="row align-items-center min-vh-75">
+
+            <div class="col-lg-7 py-5">
+
+                <span class="badge bg-danger rounded-pill px-3 py-2 mb-3">
+                    <i class="bi bi-stars"></i> Fresh & Delicious
+                </span>
+
+                <h1 class="display-3 fw-bold mb-4">
+                    Delicious Food
+                    <span class="text-danger">Delivered</span>
+                    To Your Door
+                </h1>
+
+                <p class="lead text-light mb-4">
+                    Order your favorite meals from the best restaurants
+                    and enjoy fast delivery right to your doorstep.
+                </p>
+
+                <div class="d-flex gap-3 flex-wrap">
+
+                    <a asp-controller="Menu"
+   asp-action="Index"
+                       class="btn btn-danger btn-lg rounded-pill px-4">
+                        <i class="bi bi-bag-check me-2"></i>
+                        Order Now
+                    </a>
+
+                   <a asp-controller="Menu" asp-action="Index" class="btn btn-outline-light btn-lg rounded-pill px-4">
+
+    Explore Menu
+    <i class="bi bi-arrow-right ms-2"></i>
+
+</a>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-5 text-center d-none d-lg-block">
+
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80"
+                     class="img-fluid rounded-circle shadow-lg"
+                     style="width:420px;height:420px;object-fit:cover;"
+                     alt="Delicious Food">
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- Categories -->
+@* <section class="container mt-n4 position-relative">
+
+    <div class="card border-0 shadow-lg rounded-4">
+
+
+             <div class="col-12 text-center">
+
+                    <!-- All -->
+                    <a asp-controller="Menu"
+                       asp-action="Index"
+                       class="btn btn-danger rounded-pill px-4 me-2 mb-2">
+
+                        <i class="bi bi-grid me-1"></i>
+                        All
+
+                    </a>
+
+
+                    <!-- Categories -->
+                    @foreach (var cat in ViewBag.Categories)
+                    {
+                        <a asp-controller="Menu"
+                           asp-action="Index"
+                           asp-route-categoryId="@cat.Id"
+                           class="btn btn-outline-danger rounded-pill px-4 me-2 mb-2">
+
+                            @cat.Name
+
+                        </a>
+                    }
+
+                </div>
+
+    </div>
+
+</section> *@
+
+
+<!-- Featured Items -->
+<section id="featured" class="container py-5">
+
+    <div class="text-center mb-5">
+
+        <span class="text-danger fw-bold">
+            OUR MENU
+        </span>
+
+        <h2 class="display-6 fw-bold mt-2">
+            Popular Dishes
+        </h2>
+
+        <p class="text-muted">
+            Hand-picked favorites our customers love
+        </p>
+
+    </div>
+
+
+    <div class="row g-4" id="menu">
+
+        @foreach (var item in Model)
+        {
+            <div class="col-xl-4 col-lg-4 col-md-6">
+
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+
+                    <!-- Food Image -->
+                    <div class="position-relative">
+
+                        <img src="@item.ImageUrl"
+                             class="card-img-top"
+                             alt="@item.Name"
+                             style="height:230px;object-fit:cover;">
+
+                        <!-- Popular Badge -->
+                        <span class="position-absolute top-0 start-0 m-3 badge bg-danger rounded-pill px-3 py-2">
+                            <i class="bi bi-fire"></i>
+                            Popular
+                        </span>
+
+                        <!-- Rating -->
+                        <span class="position-absolute bottom-0 end-0 m-3 badge bg-white text-dark rounded-pill px-3 py-2 shadow-sm">
+
+                            <i class="bi bi-star-fill text-warning"></i>
+                            4.8
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- Card Body -->
+                    <div class="card-body p-4">
+
+                        <h5 class="card-title fw-bold">
+                            @item.Name
+                        </h5>
+
+                        <p class="card-text text-muted">
+                            @item.Description
+                        </p>
+
+
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+
+                            <span class="fs-4 fw-bold text-danger">
+                                ₹@item.Price
+                            </span>
+
+                            <a href="/Order/AddToCart?foodItemId=@item.Id" class="btn btn-primary">
+    <i class="bi bi-cart-plus"></i> Add to Cart
+</a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</section>
+
+
+<!-- Why Choose Us -->
+<section class="bg-light py-5">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <span class="text-danger fw-bold">
+                WHY CHOOSE US
+            </span>
+
+            <h2 class="fw-bold mt-2">
+                Food Delivery Made Easy
+            </h2>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            <!-- Feature 1 -->
+            <div class="col-md-4">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100 text-center">
+
+                    <div class="card-body p-4">
+
+                        <div class="bg-danger bg-opacity-10
+                                    text-danger rounded-circle
+                                    d-flex align-items-center
+                                    justify-content-center mx-auto mb-3"
+                             style="width:70px;height:70px;">
+
+                            <i class="bi bi-lightning-charge-fill fs-3"></i>
+
+                        </div>
+
+                        <h5 class="fw-bold">
+                            Fast Delivery
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Get your favorite food delivered
+                            quickly and fresh.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Feature 2 -->
+            <div class="col-md-4">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100 text-center">
+
+                    <div class="card-body p-4">
+
+                        <div class="bg-danger bg-opacity-10
+                                    text-danger rounded-circle
+                                    d-flex align-items-center
+                                    justify-content-center mx-auto mb-3"
+                             style="width:70px;height:70px;">
+
+                            <i class="bi bi-basket2-fill fs-3"></i>
+
+                        </div>
+
+                        <h5 class="fw-bold">
+                            Fresh Food
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Delicious meals prepared fresh
+                            by our restaurant partners.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Feature 3 -->
+            <div class="col-md-4">
+
+                <div class="card border-0 shadow-sm rounded-4 h-100 text-center">
+
+                    <div class="card-body p-4">
+
+                        <div class="bg-danger bg-opacity-10
+                                    text-danger rounded-circle
+                                    d-flex align-items-center
+                                    justify-content-center mx-auto mb-3"
+                             style="width:70px;height:70px;">
+
+                            <i class="bi bi-shield-check fs-3"></i>
+
+                        </div>
+
+                        <h5 class="fw-bold">
+                            Secure Payment
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Safe and secure payment for
+                            every order.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- Bottom CTA -->
+<section class="container py-5">
+
+    <div class="bg-dark text-white rounded-4 p-5 text-center shadow">
+
+        <h2 class="fw-bold">
+            Hungry? Let's fix that! 🍔
+        </h2>
+
+        <p class="text-white-50">
+            Order your favorite food today.
+        </p>
+
+        <a asp-controller="Menu" asp-action="Index"
+           class="btn btn-danger btn-lg rounded-pill px-5">
+
+            Start Ordering
+            <i class="bi bi-arrow-right ms-2"></i>
+
+        </a>
+
+    </div>
+
+</section>

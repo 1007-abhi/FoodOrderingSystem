@@ -1,0 +1,278 @@
+﻿@model List<FoodItem>
+
+@{
+    ViewData["Title"] = "Menu";
+}
+
+<div class="bg-light min-vh-100">
+
+    <!-- Restaurant Header -->
+    <div class="bg-white border-bottom">
+        <div class="container py-4">
+
+            <div class="row align-items-center">
+
+                <div class="col-md-8">
+
+                    <div class="d-flex align-items-center">
+
+                        <div class="bg-danger text-white rounded-3
+                            d-flex align-items-center justify-content-center
+                            me-3"
+                             style="width:65px;height:65px;">
+
+                            <i class="bi bi-shop fs-2"></i>
+
+                        </div>
+
+                        <div>
+                            <h2 class="fw-bold mb-1">
+                                Delicious Food
+                            </h2>
+
+                            <p class="text-muted mb-1">
+                                <i class="bi bi-geo-alt-fill text-danger"></i>
+                                Fresh & tasty food delivered to you
+                            </p>
+
+                            <div>
+                                <span class="badge bg-success me-1">
+                                    <i class="bi bi-star-fill"></i> 4.5
+                                </span>
+
+                                <span class="text-muted small">
+                                    30-40 min · Free delivery
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+
+                    <a href="/Order/Cart"
+                       class="btn btn-danger rounded-pill px-4">
+
+                        <i class="bi bi-cart3 me-2"></i>
+                        View Cart
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Main Content -->
+    <div class="container py-4">
+
+        <!-- Page Title -->
+        <div class="mb-4">
+
+            <h3 class="fw-bold mb-1">
+                Explore Our Menu
+            </h3>
+
+            <p class="text-muted mb-0">
+                Choose from our delicious selection
+            </p>
+
+        </div>
+
+
+        <!-- Category Navigation -->
+        <div class="bg-white rounded-4 shadow-sm p-3 mb-4">
+
+            <div class="d-flex align-items-center mb-3">
+
+                <i class="bi bi-grid-fill text-danger me-2"></i>
+
+                <h6 class="fw-bold mb-0">
+                    Categories
+                </h6>
+
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+
+                <a href="/Menu"
+                   class="btn btn-danger rounded-pill px-4">
+
+                    All
+
+                </a>
+
+                @foreach (var cat in ViewBag.Categories)
+                {
+                    <a href="/Menu?categoryId=@cat.Id"
+                       class="btn btn-outline-secondary rounded-pill px-4">
+
+                        @cat.Name
+
+                    </a>
+                }
+
+            </div>
+
+        </div>
+
+
+        <!-- Food Items -->
+        @if (Model != null && Model.Any())
+        {
+            <div class="row g-4">
+
+                @foreach (var item in Model)
+                {
+                    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+
+                        <div class="card border-0 shadow-sm rounded-4
+                            overflow-hidden h-100">
+
+                            <!-- Food Image -->
+                            <div class="position-relative">
+
+                                <img src="@item.ImageUrl"
+                                     class="card-img-top"
+                                     alt="@item.Name"
+                                     style="height:210px;object-fit:cover;">
+
+                                <!-- Veg / Food Badge -->
+                                <span class="position-absolute top-0 start-0 m-3
+                                    badge bg-white text-dark shadow-sm
+                                    rounded-pill px-3 py-2">
+
+                                    @item.Category.Name
+
+                                </span>
+
+                                <!-- Favorite -->
+                                <button type="button"
+                                        class="btn btn-light position-absolute
+                                    top-0 end-0 m-3 rounded-circle
+                                    shadow-sm">
+
+                                    <i class="bi bi-heart text-danger"></i>
+
+                                </button>
+
+                            </div>
+
+
+                            <!-- Food Details -->
+                            <div class="card-body p-3 d-flex flex-column">
+
+                                <!-- Name -->
+                                <h5 class="fw-bold mb-1">
+                                    @item.Name
+                                </h5>
+
+
+                                <!-- Rating -->
+                                <div class="mb-2">
+
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-star-fill"></i>
+                                        4.5
+                                    </span>
+
+                                    <span class="text-muted small ms-1">
+                                        • Popular
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Description -->
+                                <p class="text-muted small mb-3">
+                                    @item.Description
+                                </p>
+
+
+                                <!-- Price + Add -->
+                                <div class="mt-auto">
+
+                                    <div class="d-flex
+                                        justify-content-between
+                                        align-items-center">
+
+                                        <div>
+
+                                            <small class="text-muted">
+                                                Price
+                                            </small>
+
+                                            <div class="fw-bold fs-5">
+                                                ₹@item.Price
+                                            </div>
+
+                                        </div>
+
+
+                                        <form action="/Order/AddToCart"
+                                              method="get">
+
+                                            <input type="hidden"
+                                                   name="foodItemId"
+                                                   value="@item.Id" />
+
+                                            <button type="submit"
+                                                    class="btn btn-danger
+                                                rounded-pill px-4">
+
+                                                <i class="bi bi-plus-lg me-1"></i>
+                                                Add
+
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+        }
+        else
+        {
+            <!-- Empty Menu -->
+            <div class="bg-white rounded-4 shadow-sm text-center p-5">
+
+                <div class="mb-3">
+                    <i class="bi bi-emoji-frown display-3 text-secondary"></i>
+                </div>
+
+                <h4 class="fw-bold">
+                    No Food Available
+                </h4>
+
+                <p class="text-muted">
+                    We couldn't find any food items in this category.
+                </p>
+
+                <a href="/Menu"
+                   class="btn btn-danger rounded-pill px-4">
+
+                    <i class="bi bi-arrow-left me-1"></i>
+                    View All Food
+
+                </a>
+
+            </div>
+        }
+
+    </div>
+
+</div>

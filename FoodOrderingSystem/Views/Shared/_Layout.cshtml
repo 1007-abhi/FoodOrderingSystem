@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Food Ordering System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+            .navbar-brand {
+                font-weight: bold;
+                font-size: 1.5rem;
+            }
+
+            .hero-section {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 100px 0;
+            }
+
+            .food-card {
+                transition: transform 0.3s;
+            }
+
+                .food-card:hover {
+                    transform: translateY(-5px);
+                }
+
+            .cart-badge {
+                position: relative;
+                top: -10px;
+                left: -5px;
+            }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="bi bi-shop"></i> Food Order</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Menu"
+                           asp-action="Index">Menu</a>
+                    </li>
+                    @if (Context.Session.GetString("IsAdmin") == "True")
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/Admin/Dashboard">Admin</a></li>
+                    }
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Order/Cart">
+                            <i class="bi bi-cart3"></i> Cart
+                            <span class="badge bg-danger cart-badge" id="cartCount">0</span>
+                        </a>
+                    </li>@if (Context.Session.GetString("Username") != null)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle"></i> @Context.Session.GetString("Username")
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="/Account/Profile">
+                                        <i class="bi bi-person"></i> My Profile
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/Order/MyOrders">
+                                        <i class="bi bi-bag-check"></i> My Orders
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="/Account/Logout">
+                                        <i class="bi bi-box-arrow-right"></i> Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+else
+                    {
+                        <li class="nav-item"><a class="nav-link" href="/Account/Login">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/Account/Register">Register</a></li>
+                    }
+                   
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p>&copy; 2026 Food Ordering System. All rights by Abhinav_Gupta.</p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Run update on page load
+                updateCartCount();
+            });
+
+            function updateCartCount() {
+                // AJAX fetch request to the Controller
+                fetch('/Order/GetCartCount')
+                    .then(r => r.json())
+                    .then(d => {
+                        // Update the badge element with the new count
+                        document.getElementById('cartCount').innerText = d.count;
+                    });
+            }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

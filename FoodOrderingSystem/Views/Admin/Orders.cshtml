@@ -1,0 +1,304 @@
+﻿@model List<Order>
+@{
+    ViewData["Title"] = "All Orders";
+}
+
+<div class="container-fluid my-4">
+    <h2 class="mb-4"><i class="bi bi-list-check"></i> Order Management</h2>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body d-flex justify-content-between">
+                    <div>
+                        <h6>Pending Orders</h6>
+                        <h3>@ViewBag.PendingCount</h3>
+                    </div>
+                    <i class="bi bi-clock display-4"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body d-flex justify-content-between">
+                    <div>
+                        <h6>Confirmed</h6>
+                        <h3>@ViewBag.ConfirmedCount</h3>
+                    </div>
+                    <i class="bi bi-check-circle display-4"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body d-flex justify-content-between">
+                    <div>
+                        <h6>Today's Orders</h6>
+                        <h3>@ViewBag.TodayCount</h3>
+                    </div>
+                    <i class="bi bi-calendar-check display-4"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body d-flex justify-content-between">
+                    <div>
+                        <h6>Total Revenue</h6>
+                        <h3>$@ViewBag.TotalRevenue.ToString("F0")</h3>
+                    </div>
+                    <i class="bi bi-cash-stack display-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Filter Section -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0"><i class="bi bi-funnel"></i> Filter Orders</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" asp-action="Orders" class="row g-3 align-items-end">
+                <div class="col-md-2">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="All">All Status</option>
+                        @foreach (var s in ViewBag.StatusList)
+                        {
+                            if (s != "All")
+                            {
+                                <option value="@s" selected="@(ViewBag.CurrentStatus == s)">@s</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Search Customer</label>
+                    <input type="text" name="searchString" class="form-control"
+                           value="@ViewBag.CurrentSearch" placeholder="Name, Username or Email..." />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">From Date</label>
+                    <input type="date" name="fromDate" class="form-control" value="@ViewBag.FromDate" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">To Date</label>
+                    <input type="date" name="toDate" class="form-control" value="@ViewBag.ToDate" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Sort By</label>
+                    <select name="sortOrder" class="form-select">
+                        <option value="">Newest First</option>
+                        <option value="date_asc" selected="@(ViewBag.CurrentSort == "date_asc")">Oldest First</option>
+                        <option value="total_desc" selected="@(ViewBag.CurrentSort == "total_desc")">Highest Amount</option>
+                        <option value="total_asc" selected="@(ViewBag.CurrentSort == "total_asc")">Lowest Amount</option>
+                        <option value="status" selected="@(ViewBag.CurrentSort == "status")">Status (A-Z)</option>
+                    </select>
+                </div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+
+            @if (!string.IsNullOrEmpty(ViewBag.CurrentStatus) ||
+                        !string.IsNullOrEmpty(ViewBag.CurrentSearch) ||
+                        ViewBag.FromDate != null ||
+                        ViewBag.ToDate != null)
+            {
+                <div class="mt-3">
+                    <span class="text-muted">Active Filters:</span>
+                    @if (!string.IsNullOrEmpty(ViewBag.CurrentStatus))
+                    {
+                        <span class="badge bg-primary me-1">Status: @ViewBag.CurrentStatus</span>
+                    }
+                    @if (!string.IsNullOrEmpty(ViewBag.CurrentSearch))
+                    {
+                        <span class="badge bg-secondary me-1">Search: @ViewBag.CurrentSearch</span>
+                    }
+                    @if (ViewBag.FromDate != null)
+                    {
+                        <span class="badge bg-info me-1">From: @ViewBag.FromDate</span>
+                    }
+                    @if (ViewBag.ToDate != null)
+                    {
+                        <span class="badge bg-info me-1">To: @ViewBag.ToDate</span>
+                    }
+                    <a href="/Admin/Orders" class="btn btn-sm btn-outline-danger ms-2">
+                        <i class="bi bi-x-circle"></i> Clear All
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Orders Table -->
+    <div class="card shadow">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>Showing @Model.Count Orders</span>
+            <div>
+                <a href="#" class="btn btn-sm btn-success" onclick="window.print()">
+                    <i class="bi bi-printer"></i> Print
+                </a>
+                <a href="#" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-download"></i> Export
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Order ID</th>
+                            <th>
+                                <a href="@Url.Action("Orders", new { sortOrder = ViewBag.DateSortParam, status = ViewBag.CurrentStatus, searchString = ViewBag.CurrentSearch, fromDate = ViewBag.FromDate, toDate = ViewBag.ToDate })" class="text-white text-decoration-none">
+                                    Date <i class="bi bi-arrow-down-up"></i>
+                                </a>
+                            </th>
+                            <th>Customer</th>
+                            <th>Contact</th>
+                            <th>
+                                <a href="@Url.Action("Orders", new { sortOrder = ViewBag.TotalSortParam, status = ViewBag.CurrentStatus, searchString = ViewBag.CurrentSearch, fromDate = ViewBag.FromDate, toDate = ViewBag.ToDate })" class="text-white text-decoration-none">
+                                    Total <i class="bi bi-arrow-down-up"></i>
+                                </a>
+                            </th>
+                            <th>
+                                <a href="@Url.Action("Orders", new { sortOrder = ViewBag.StatusSortParam, status = ViewBag.CurrentStatus, searchString = ViewBag.CurrentSearch, fromDate = ViewBag.FromDate, toDate = ViewBag.ToDate })" class="text-white text-decoration-none">
+                                    Status <i class="bi bi-arrow-down-up"></i>
+                                </a>
+                            </th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td><strong>#@order.Id</strong></td>
+                                <td>@order.OrderDate.ToString("MM/dd/yyyy HH:mm")</td>
+                                <td>
+                                    <div>@order.User?.FullName</div>
+                                    <small class="text-muted">@order.User?.Username</small>
+                                </td>
+                                <td>@order.PhoneNumber</td>
+                                <td class="fw-bold">$@order.TotalAmount.ToString("F2")</td>
+                                <td>
+                                    @{
+                                        var badgeClass = order.Status switch
+                                        {
+                                            "Pending" => "bg-warning text-dark",
+                                            "Confirmed" => "bg-info",
+                                            "Preparing" => "bg-primary",
+                                            "OutForDelivery" => "bg-secondary",
+                                            "Delivered" => "bg-success",
+                                            "Cancelled" => "bg-danger",
+                                            _ => "bg-light text-dark"
+                                        };
+                                    }
+                                    <span class="badge @badgeClass">@order.Status</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2 px-2">
+
+                                        <a href="/Admin/OrderDetails/@order.Id"
+                                           class="btn btn-sm btn-outline-info"
+                                           title="View Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+
+                                        @if (order.Status == "Pending")
+                                        {
+                                            <form asp-action="ConfirmOrder"
+                                                  method="post"
+                                                  class="m-0"
+                                                  onsubmit="return confirm('Confirm this order?');">
+                                                <input type="hidden" name="orderId" value="@order.Id" />
+                                                <button type="submit" class="btn btn-sm btn-success" title="Confirm">
+                                                    <i class="bi bi-check-lg"></i>
+                                                </button>
+                                            </form>
+                                        }
+
+                                        @if (order.Status == "Confirmed")
+                                        {
+                                            <form asp-action="UpdateOrderStatus" method="post" class="m-0">
+                                                <input type="hidden" name="orderId" value="@order.Id" />
+                                                <input type="hidden" name="status" value="Preparing" />
+                                                <button type="submit" class="btn btn-sm btn-primary" title="Start Preparing">
+                                                    <i class="bi bi-fire"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                        else if (order.Status == "Preparing")
+                                        {
+                                            <form asp-action="UpdateOrderStatus" method="post" class="m-0">
+                                                <input type="hidden" name="orderId" value="@order.Id" />
+                                                <input type="hidden" name="status" value="OutForDelivery" />
+                                                <button type="submit" class="btn btn-sm btn-secondary" title="Out for Delivery">
+                                                    <i class="bi bi-truck"></i>
+                                                </button>
+                                            </form>
+                                        }
+                                        else if (order.Status == "OutForDelivery")
+                                        {
+                                            <form asp-action="UpdateOrderStatus" method="post" class="m-0">
+                                                <input type="hidden" name="orderId" value="@order.Id" />
+                                                <input type="hidden" name="status" value="Delivered" />
+                                                <button type="submit" class="btn btn-sm btn-success" title="Mark Delivered">
+                                                    <i class="bi bi-check-circle"></i>
+                                                </button>
+                                            </form>
+                                        }
+
+                                        @if (order.Status != "Delivered" && order.Status != "Cancelled")
+                                        {
+                                            <form asp-action="CancelOrder"
+                                                  method="post"
+                                                  class="m-0"
+                                                  onsubmit="return confirm('Cancel this order?');">
+                                                <input type="hidden" name="orderId" value="@order.Id" />
+                                                <button type="submit" class="btn btn-sm btn-danger" title="Cancel">
+                                                    <i class="bi bi-x-lg"></i>
+                                                </button>
+                                            </form>
+                                        }
+
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-search display-4"></i>
+                    <p class="mt-3">No orders found matching your criteria.</p>
+                    <a href="/Admin/Orders" class="btn btn-outline-primary">Clear Filters</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

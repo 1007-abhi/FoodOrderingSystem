@@ -1,0 +1,155 @@
+﻿@model Order
+@{
+    ViewData["Title"] = $"Order #{Model.Id} Details";
+}
+
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-receipt"></i> Order #@Model.Id Details</h2>
+        <a href="/Admin/Orders" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Orders</a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Order Items</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <tr>
+                                    <td>@item.FoodItem?.Name</td>
+                                    <td>@item.Quantity</td>
+                                    <td>$@item.UnitPrice.ToString("F2")</td>
+                                    <td>$@((item.Quantity * item.UnitPrice).ToString("F2"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-primary">
+                                <td colspan="3" class="text-end"><strong>Total Amount:</strong></td>
+                                <td><strong>$@Model.TotalAmount.ToString("F2")</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Update Status</h5>
+                </div>
+                <div class="card-body">
+                    <div class="btn-group w-100" role="group">
+                        @if (Model.Status != "Pending" && Model.Status != "Cancelled" && Model.Status != "Delivered")
+                        {
+                            <form asp-action="UpdateOrderStatus" method="post" class="me-2">
+                                <input type="hidden" name="orderId" value="@Model.Id" />
+                                <input type="hidden" name="status" value="Pending" />
+                                <button type="submit" class="btn btn-warning">Mark Pending</button>
+                            </form>
+                        }
+
+                        @if (Model.Status == "Pending")
+                        {
+                            <form asp-action="ConfirmOrder" method="post" class="me-2">
+                                <input type="hidden" name="orderId" value="@Model.Id" />
+                                <button type="submit" class="btn btn-success">Confirm Order</button>
+                            </form>
+                        }
+
+                        @if (Model.Status == "Confirmed")
+                        {
+                            <form asp-action="UpdateOrderStatus" method="post" class="me-2">
+                                <input type="hidden" name="orderId" value="@Model.Id" />
+                                <input type="hidden" name="status" value="Preparing" />
+                                <button type="submit" class="btn btn-primary">Start Preparing</button>
+                            </form>
+                        }
+
+                        @if (Model.Status == "Preparing")
+                        {
+                            <form asp-action="UpdateOrderStatus" method="post" class="me-2">
+                                <input type="hidden" name="orderId" value="@Model.Id" />
+                                <input type="hidden" name="status" value="OutForDelivery" />
+                                <button type="submit" class="btn btn-secondary">Out for Delivery</button>
+                            </form>
+                        }
+
+                        @if (Model.Status == "OutForDelivery")
+                        {
+                            <form asp-action="UpdateOrderStatus" method="post" class="me-2">
+                                <input type="hidden" name="orderId" value="@Model.Id" />
+                                <input type="hidden" name="status" value="Delivered" />
+                                <button type="submit" class="btn btn-success">Mark Delivered</button>
+                            </form>
+                        }
+
+                        @if (Model.Status != "Delivered" && Model.Status != "Cancelled")
+                        {
+                            <form asp-action="CancelOrder" method="post" onsubmit="return confirm('Are you sure you want to cancel this order?');">
+                                <input type="hidden" name="orderId" value="@Model.Id" />
+                                <button type="submit" class="btn btn-danger">Cancel Order</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Customer Info</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> @Model.User?.FullName</p>
+                    <p><strong>Email:</strong> @Model.User?.Email</p>
+                    <p><strong>Phone:</strong> @Model.PhoneNumber</p>
+                </div>
+            </div>
+
+            <div class="card shadow mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Delivery Address</h5>
+                </div>
+                <div class="card-body">
+                    <p>@Model.DeliveryAddress</p>
+                </div>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Order Status</h5>
+                </div>
+                <div class="card-body text-center">
+                    @{
+                        var statusColor = Model.Status switch
+                        {
+                            "Pending" => "warning",
+                            "Confirmed" => "info",
+                            "Preparing" => "primary",
+                            "OutForDelivery" => "secondary",
+                            "Delivered" => "success",
+                            "Cancelled" => "danger",
+                            _ => "light"
+                        };
+                    }
+                    <h3 class="text-@statusColor">@Model.Status</h3>
+                    <p class="text-muted mb-0">Order Date: @Model.OrderDate.ToString("MMM dd, yyyy HH:mm")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

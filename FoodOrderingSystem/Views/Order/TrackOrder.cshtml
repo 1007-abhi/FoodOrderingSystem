@@ -1,0 +1,142 @@
+﻿@model Order
+@{
+    ViewData["Title"] = $"Track Order #{Model.Id}";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Order #@Model.Id</h4>
+                    <span class="badge bg-light text-dark">@Model.Status</span>
+                </div>
+                <div class="card-body">
+                    <!-- Progress Tracker -->
+                    <div class="progress-tracker mb-5">
+                        @{
+                            var statuses = new[] { "Pending", "Confirmed", "Preparing", "OutForDelivery", "Delivered" };
+                            var currentIndex = Array.IndexOf(statuses, Model.Status);
+                            if (Model.Status == "Cancelled")
+                            {
+                                <div class="alert alert-danger text-center">
+                                    <i class="bi bi-x-octagon-fill display-4"></i>
+                                    <h4 class="mt-2">Order Cancelled</h4>
+                                    <p>This order has been cancelled.</p>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="d-flex justify-content-between position-relative mb-3">
+                                    <div class="progress position-absolute w-100" style="height: 5px; top: 20px; z-index: 0;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: @((currentIndex * 25))%"></div>
+                                    </div>
+
+                                    @for (int i = 0; i < statuses.Length; i++)
+                                    {
+                                        var isActive = i <= currentIndex;
+                                        var isCurrent = i == currentIndex;
+                                        var icon = statuses[i] switch
+                                        {
+                                            "Pending" => "clock",
+                                            "Confirmed" => "check-circle",
+                                            "Preparing" => "fire",
+                                            "OutForDelivery" => "truck",
+                                            "Delivered" => "box-seam",
+                                            _ => "circle"
+                                        };
+
+                                        <div class="text-center position-relative" style="z-index: 1;">
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2
+                                                @(isActive ? "bg-success text-white" : "bg-light text-muted")"
+                                                 style="width: 45px; height: 45px; border: 3px solid @(isActive ? "#28a745" : "#dee2e6");">
+                                                <i class="bi bi-@icon fs-5"></i>
+                                            </div>
+                                            <small class="@(isActive ? "text-success fw-bold" : "text-muted")">
+                                                @(statuses[i] == "OutForDelivery" ? "Out for Delivery" : statuses[i])
+                                            </small>
+                                            @if (isCurrent && Model.Status != "Delivered")
+                                            {
+                                                <br />
+                                                <span class="badge bg-primary mt-1">Current</span>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    <hr />
+
+                    <!-- Order Details -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Order Date</h6>
+                            <p>@Model.OrderDate.ToString("MMMM dd, yyyy at HH:mm")</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Estimated Delivery</h6>
+                            <p>
+                                @if (Model.Status == "Delivered")
+                                {
+                                    <span class="text-success">Delivered on @Model.OrderDate.AddHours(1).ToString("MMM dd, HH:mm")</span>
+                                }
+                                else if (Model.Status == "Cancelled")
+                                {
+                                    <span class="text-danger">Order Cancelled</span>
+                                }
+                                else
+                                {
+                                    <span>30-45 minutes</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Delivery Address</h6>
+                            <p>@Model.DeliveryAddress</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted">Contact Number</h6>
+                            <p>@Model.PhoneNumber</p>
+                        </div>
+                    </div>
+
+                    <!-- Items -->
+                    <h6 class="mb-3">Order Items</h6>
+                    <table class="table table-sm">
+                        <tbody>
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <tr>
+                                    <td>
+                                        <img src="@item.FoodItem?.ImageUrl" alt="@item.FoodItem?.Name"
+                                             style="width: 50px; height: 50px; object-fit: cover;" class="rounded" />
+                                    </td>
+                                    <td>@item.FoodItem?.Name</td>
+                                    <td>x @item.Quantity</td>
+                                    <td class="text-end">$@((item.Quantity * item.UnitPrice).ToString("F2"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-active">
+                                <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                <td class="text-end"><strong>$@Model.TotalAmount.ToString("F2")</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="/Order/MyOrders" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to My Orders
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

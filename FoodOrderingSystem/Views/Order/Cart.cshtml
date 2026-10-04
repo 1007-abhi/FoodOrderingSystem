@@ -1,0 +1,472 @@
+﻿@model List<FoodOrderingSystem.Controllers.CartItem>
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<div class="bg-light min-vh-100 py-5">
+
+    <div class="container">
+
+        <!-- =========================
+             PAGE HEADER
+        ========================== -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <div>
+                <h2 class="fw-bold mb-1">
+                    <i class="bi bi-cart3 text-danger me-2"></i>
+                    Your Cart
+                </h2>
+
+                <p class="text-muted mb-0">
+                    Review your items before placing your order
+                </p>
+            </div>
+
+            <a asp-controller="Menu"
+               asp-action="Index"
+               class="btn btn-outline-danger rounded-pill px-4">
+
+                <i class="bi bi-arrow-left me-1"></i>
+                Continue Shopping
+
+            </a>
+
+        </div>
+
+
+        @if (!Model.Any())
+        {
+            <!-- =========================
+                 EMPTY CART
+            ========================== -->
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body text-center py-5">
+
+                    <div class="bg-danger bg-opacity-10
+                        text-danger rounded-circle
+                        d-flex align-items-center
+                        justify-content-center mx-auto mb-4"
+                         style="width:100px;height:100px;">
+
+                        <i class="bi bi-cart-x fs-1"></i>
+
+                    </div>
+
+                    <h3 class="fw-bold">
+                        Your Cart is Empty
+                    </h3>
+
+                    <p class="text-muted mb-4">
+                        Looks like you haven't added anything to your cart yet.
+                    </p>
+
+                    <a asp-controller="Menu"
+                       asp-action="Index"
+                       class="btn btn-danger btn-lg rounded-pill px-5">
+
+                        <i class="bi bi-shop me-2"></i>
+                        Start Shopping
+
+                    </a>
+
+                </div>
+
+            </div>
+        }
+        else
+        {
+            <div class="row g-4">
+
+                <!-- =========================
+                     CART ITEMS
+                ========================== -->
+                <div class="col-lg-8">
+
+                    @foreach (var item in Model)
+                    {
+                        <div class="card border-0 shadow-sm rounded-4 mb-3">
+
+                            <div class="card-body p-3">
+
+                                <div class="row align-items-center">
+
+                                    <!-- Food Image -->
+                                    <div class="col-4 col-md-2">
+
+                                        <img src="@item.ImageUrl"
+                                             class="img-fluid rounded-3"
+                                             alt="@item.Name"
+                                             style="width:100%;height:100px;object-fit:cover;">
+
+                                    </div>
+
+
+                                    <!-- Food Details -->
+                                    <div class="col-8 col-md-4">
+
+                                        <h5 class="fw-bold mb-1">
+                                            @item.Name
+                                        </h5>
+
+                                        <p class="text-muted small mb-1">
+                                            Delicious & freshly prepared
+                                        </p>
+
+                                        <span class="fw-bold text-danger">
+                                            ₹@item.Price
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- Quantity -->
+                              
+<div class="col-7 col-md-3 mt-3 mt-md-0">
+
+    <div class="input-group input-group-sm"
+         style="max-width: 140px;">
+
+        <!-- Minus -->
+        <form asp-controller="Order"
+              asp-action="UpdateQuantity"
+              method="post"
+              class="m-0">
+
+            <input type="hidden"
+                   name="foodItemId"
+                   value="@item.FoodItemId" />
+
+            <input type="hidden"
+                   name="quantity"
+                   value="@(item.Quantity - 1)" />
+
+            <button type="submit"
+                    class="btn btn-outline-danger"
+                    @(item.Quantity <= 1 ? "disabled" : "")>
+
+                <i class="bi bi-dash"></i>
+
+            </button>
+
+        </form>
+
+
+        <!-- Current Quantity -->
+        <input type="text"
+               class="form-control text-center fw-bold"
+               value="@item.Quantity"
+               readonly />
+
+
+        <!-- Plus -->
+        <form asp-controller="Order"
+              asp-action="UpdateQuantity"
+              method="post"
+              class="m-0">
+
+            <input type="hidden"
+                   name="foodItemId"
+                   value="@item.FoodItemId" />
+
+            <input type="hidden"
+                   name="quantity"
+                   value="@(item.Quantity + 1)" />
+
+            <button type="submit"
+                    class="btn btn-outline-danger">
+
+                <i class="bi bi-plus"></i>
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+                                    <!-- Actions -->
+                                    <div class="col-5 col-md-3 text-end mt-3 mt-md-0">
+
+                                        <div class="fw-bold fs-5 mb-2">
+                                            ₹@(item.Price * item.Quantity)
+                                        </div>
+
+                                        <a href="/Order/RemoveFromCart?foodItemId=@item.FoodItemId"
+                                           class="btn btn-outline-danger btn-sm rounded-pill">
+
+                                            <i class="bi bi-trash me-1"></i>
+                                            Remove
+
+                                        </a>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+
+
+                    <!-- Delivery Information -->
+                    <div class="card border-0 shadow-sm rounded-4 mt-4">
+
+                        <div class="card-body p-4">
+
+                            <h5 class="fw-bold mb-3">
+
+                                <i class="bi bi-truck text-danger me-2"></i>
+                                Delivery Information
+
+                            </h5>
+
+                            <div class="row g-3">
+
+                                <div class="col-md-4">
+
+                                    <div class="d-flex align-items-center">
+
+                                        <div class="bg-danger bg-opacity-10
+                                            text-danger rounded-circle
+                                            d-flex align-items-center
+                                            justify-content-center me-3"
+                                             style="width:45px;height:45px;">
+
+                                            <i class="bi bi-lightning-charge"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <small class="text-muted d-block">
+                                                Delivery
+                                            </small>
+
+                                            <strong>
+                                                30-40 mins
+                                            </strong>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-md-4">
+
+                                    <div class="d-flex align-items-center">
+
+                                        <div class="bg-danger bg-opacity-10
+                                            text-danger rounded-circle
+                                            d-flex align-items-center
+                                            justify-content-center me-3"
+                                             style="width:45px;height:45px;">
+
+                                            <i class="bi bi-shield-check"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <small class="text-muted d-block">
+                                                Payment
+                                            </small>
+
+                                            <strong>
+                                                Secure
+                                            </strong>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-md-4">
+
+                                    <div class="d-flex align-items-center">
+
+                                        <div class="bg-danger bg-opacity-10
+                                            text-danger rounded-circle
+                                            d-flex align-items-center
+                                            justify-content-center me-3"
+                                             style="width:45px;height:45px;">
+
+                                            <i class="bi bi-headset"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <small class="text-muted d-block">
+                                                Support
+                                            </small>
+
+                                            <strong>
+                                                24/7 Available
+                                            </strong>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================
+                     ORDER SUMMARY
+                ========================== -->
+                <div class="col-lg-4">
+
+                    <div class="card border-0 shadow rounded-4 sticky-lg-top"
+                         style="top:20px;">
+
+                        <div class="card-body p-4">
+
+                            <h4 class="fw-bold mb-4">
+                                Order Summary
+                            </h4>
+
+
+                            <!-- Items -->
+                            <div class="d-flex justify-content-between mb-3">
+
+                                <span class="text-muted">
+                                    Items
+                                </span>
+
+                                <span class="fw-semibold">
+                                    @Model.Sum(x => x.Quantity)
+                                </span>
+
+                            </div>
+
+
+                            <!-- Subtotal -->
+                            <div class="d-flex justify-content-between mb-3">
+
+                                <span class="text-muted">
+                                    Subtotal
+                                </span>
+
+                                <span>
+                                    ₹@ViewBag.Total
+                                </span>
+
+                            </div>
+
+
+                            <!-- Delivery -->
+                            <div class="d-flex justify-content-between mb-3">
+
+                                <span class="text-muted">
+                                    Delivery Fee
+                                </span>
+
+                                <span class="text-success fw-semibold">
+                                    FREE
+                                </span>
+
+                            </div>
+
+
+                            <hr>
+
+
+                            <!-- Total -->
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                                <span class="fs-5 fw-bold">
+                                    Total
+                                </span>
+
+                                <span class="fs-3 fw-bold text-danger">
+                                    ₹@ViewBag.Total
+                                </span>
+
+                            </div>
+
+
+                            <!-- Checkout -->
+                            <a href="/Order/Checkout"
+                               class="btn btn-danger btn-lg w-100 rounded-pill">
+
+                                Proceed to Checkout
+
+                                <i class="bi bi-arrow-right ms-2"></i>
+
+                            </a>
+
+
+                            <!-- Secure -->
+                            <div class="text-center mt-3">
+
+                                <small class="text-muted">
+
+                                    <i class="bi bi-shield-lock-fill text-success me-1"></i>
+
+                                    Secure & encrypted checkout
+
+                                </small>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Coupon -->
+                    <div class="card border-0 shadow-sm rounded-4 mt-3">
+
+                        <div class="card-body p-4">
+
+                            <h6 class="fw-bold mb-3">
+
+                                <i class="bi bi-tag text-danger me-2"></i>
+                                Have a promo code?
+
+                            </h6>
+
+                            <div class="input-group">
+
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="Enter coupon">
+
+                                <button class="btn btn-outline-danger">
+                                    Apply
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</div>
+

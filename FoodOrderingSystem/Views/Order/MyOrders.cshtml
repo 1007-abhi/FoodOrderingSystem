@@ -1,0 +1,415 @@
+﻿@model List<Order>
+
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<div class="container py-5">
+    <!-- Page Header -->
+    <div class="d-flex flex-column flex-md-row
+        justify-content-between align-items-md-center
+        mb-5">
+
+        <div>
+            <h1 class="fw-bold mb-2">
+                <i class="bi bi-bag-check-fill text-primary me-2"></i>
+                My Orders
+            </h1>
+
+            <p class="text-muted mb-0">
+                Track your orders and enjoy your favorite meals again.
+            </p>
+        </div>
+
+        <a href="/Menu"
+           class="btn btn-primary mt-3 mt-md-0 px-4">
+
+            <i class="bi bi-plus-lg me-2"></i>
+            Order Food
+
+        </a>
+
+    </div>
+
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Filter Section -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body bg-light">
+            <form method="get" asp-action="MyOrders" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select" asp-items="@(new SelectList(ViewBag.StatusList, ViewBag.CurrentStatus))">
+                        <option value="All">All Status</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">From Date</label>
+                    <input type="date" name="fromDate" class="form-control" value="@ViewBag.FromDate" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">To Date</label>
+                    <input type="date" name="toDate" class="form-control" value="@ViewBag.ToDate" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Sort By</label>
+                    <select name="sortOrder" class="form-select">
+                        <option value="">Newest First</option>
+                        <option value="date_asc" selected="@(ViewBag.CurrentSort == "date_asc")">Oldest First</option>
+                        <option value="total_desc" selected="@(ViewBag.CurrentSort == "total_desc")">Highest Amount</option>
+                        <option value="total_asc" selected="@(ViewBag.CurrentSort == "total_asc")">Lowest Amount</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-funnel"></i> Filter
+                    </button>
+                </div>
+            </form>
+            @if (!string.IsNullOrEmpty(ViewBag.CurrentStatus) || ViewBag.FromDate != null || ViewBag.ToDate != null)
+            {
+                <div class="mt-2">
+                    <a href="/Order/MyOrders" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> Clear Filters
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+
+
+    @if (!Model.Any())
+    {
+        <!-- Empty Orders -->
+        <div class="row justify-content-center">
+
+            <div class="col-md-7 col-lg-6">
+
+                <div class="card border-0 shadow-sm rounded-4 text-center p-5">
+
+                    <div class="mb-4">
+                        <i class="bi bi-bag-x display-1 text-secondary"></i>
+                    </div>
+
+                    <h3 class="fw-bold">
+                        No Orders Yet
+                    </h3>
+
+                    <p class="text-muted mb-4">
+                        Looks like you haven't ordered anything yet.
+                        Discover something delicious from our menu!
+                    </p>
+
+                    <a href="/Menu"
+                       class="btn btn-primary btn-lg px-5">
+
+                        <i class="bi bi-shop me-2"></i>
+                        Browse Menu
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+
+            @foreach (var order in Model)
+            {
+                var badgeClass = order.Status switch
+                {
+                    "Pending" => "bg-warning text-dark",
+                    "Confirmed" => "bg-info text-dark",
+                    "Preparing" => "bg-primary",
+                    "OutForDelivery" => "bg-secondary",
+                    "Delivered" => "bg-success",
+                    "Cancelled" => "bg-danger",
+                    _ => "bg-light text-dark"
+                };
+
+                var statusIcon = order.Status switch
+                {
+                    "Pending" => "bi-hourglass-split",
+                    "Confirmed" => "bi-check-circle",
+                    "Preparing" => "bi-fire",
+                    "OutForDelivery" => "bi-bicycle",
+                    "Delivered" => "bi-check-circle-fill",
+                    "Cancelled" => "bi-x-circle-fill",
+                    _ => "bi-info-circle"
+                };
+
+
+                <div class="col-12 col-lg-6">
+
+                    <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden">
+
+                        <!-- Order Header -->
+                        <div class="card-header bg-white border-0 p-4">
+
+                            <div class="d-flex justify-content-between align-items-start">
+
+                                <div>
+
+                                    <small class="text-muted d-block mb-1">
+                                        ORDER ID
+                                    </small>
+
+                                    <h5 class="fw-bold mb-0">
+                                        #@order.Id
+                                    </h5>
+
+                                </div>
+
+
+                                <span class="badge @badgeClass rounded-pill px-3 py-2">
+
+                                    <i class="bi @statusIcon me-1"></i>
+                                    @order.Status
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="card-body px-4 pb-4">
+
+                            <!-- Date + Total -->
+                            <div class="row g-3 mb-4">
+
+                                <div class="col-6">
+
+                                    <div class="bg-light rounded-3 p-3">
+
+                                        <small class="text-muted d-block">
+                                            <i class="bi bi-calendar3 me-1"></i>
+                                            Order Date
+                                        </small>
+
+                                        <strong class="d-block mt-1">
+                                            @order.OrderDate.ToString("MMM dd, yyyy")
+                                        </strong>
+
+                                        <small class="text-muted">
+                                            @order.OrderDate.ToString("hh:mm tt")
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-6">
+
+                                    <div class="bg-primary-subtle rounded-3 p-3">
+
+                                        <small class="text-primary d-block">
+                                            <i class="bi bi-wallet2 me-1"></i>
+                                            Total
+                                        </small>
+
+                                        <strong class="d-block mt-1 text-primary fs-5">
+                                            $@order.TotalAmount.ToString("F2")
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Items -->
+                            <div class="mb-4">
+
+                                <div class="d-flex justify-content-between
+                                    align-items-center mb-3">
+
+                                    <h6 class="fw-bold mb-0">
+                                        <i class="bi bi-basket2-fill text-primary me-2"></i>
+                                        Your Items
+                                    </h6>
+
+                                    <span class="badge bg-light text-dark">
+                                        @order.OrderItems.Count item(s)
+                                    </span>
+
+                                </div>
+
+
+                                <div class="list-group list-group-flush">
+
+                                    @foreach (var item in order.OrderItems.Take(3))
+                                    {
+                                        <div class="list-group-item px-0
+                                            d-flex justify-content-between
+                                            align-items-center">
+
+                                            <div class="d-flex align-items-center">
+
+                                                <div class="bg-warning-subtle
+                                                    rounded-3
+                                                    d-flex
+                                                    align-items-center
+                                                    justify-content-center
+                                                    me-3"
+                                                     style="width:42px;height:42px;">
+
+                                                    <i class="bi bi-egg-fried text-warning fs-5"></i>
+
+                                                </div>
+
+                                                <div>
+
+                                                    <div class="fw-semibold">
+                                                        @item.FoodItem?.Name
+                                                    </div>
+
+                                                    <small class="text-muted">
+                                                        Qty: @item.Quantity
+                                                    </small>
+
+                                                </div>
+
+                                            </div>
+
+
+                                            <span class="fw-semibold">
+                                                $@((item.Quantity * item.UnitPrice).ToString("F2"))
+                                            </span>
+
+                                        </div>
+                                    }
+
+
+                                    @if (order.OrderItems.Count > 3)
+                                    {
+                                        <div class="text-center pt-3">
+
+                                            <span class="badge bg-light text-muted rounded-pill px-3 py-2">
+
+                                                <i class="bi bi-three-dots me-1"></i>
+
+                                                @(order.OrderItems.Count - 3)
+                                                more item(s)
+
+                                            </span>
+
+                                        </div>
+                                    }
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Delivery Progress -->
+                            @if (order.Status != "Cancelled")
+                            {
+                                <div class="border rounded-3 p-3 mb-4">
+
+                                    <div class="d-flex align-items-center">
+
+                                        <div class="text-success me-3">
+                                            <i class="bi bi-check-circle-fill fs-4"></i>
+                                        </div>
+
+                                        <div class="flex-grow-1">
+
+                                            <small class="text-muted">
+                                                Current Status
+                                            </small>
+
+                                            <div class="fw-semibold">
+                                                @order.Status
+                                            </div>
+
+                                        </div>
+
+                                        <i class="bi @statusIcon text-primary fs-4"></i>
+
+                                    </div>
+
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-danger border-0 rounded-3">
+
+                                    <i class="bi bi-x-circle-fill me-2"></i>
+
+                                    This order has been cancelled.
+
+                                </div>
+                            }
+
+                            <div class="card-body">
+                                <div class="d-grid gap-2">
+                                    <a href="/Order/TrackOrder/@order.Id" class="btn btn-outline-primary">
+                                        <i class="bi bi-geo-alt"></i> Track Order
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Actions -->
+                            <div class="d-flex gap-2">
+
+                                @if (order.Status == "Delivered")
+                                {
+                                    <a href="/Order/Reorder/@order.Id"
+                                       class="btn btn-outline-success">
+
+                                        <i class="bi bi-arrow-repeat me-1"></i>
+                                        Reorder
+
+                                    </a>
+                                }
+                            </div>
+
+                            @if (order.Status == "Pending" || order.Status == "Confirmed")
+                            {
+                                <form asp-action="CancelMyOrder" method="post" onsubmit="return confirm('Are you sure you want to cancel this order?');">
+                                    <input type="hidden" name="orderId" value="@order.Id" />
+                                    <button type="submit" class="btn btn-outline-danger w-100">
+                                        <i class="bi bi-x-circle"></i> Cancel Order
+                                    </button>
+                                </form>
+                            }
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+    <!-- Footer -->
+    <div class="card-footer bg-light border-0 text-center py-3">
+
+        <small class="text-muted">
+
+            <i class="bi bi-shield-check text-success me-1"></i>
+
+            Thank you for ordering with us!
+
+        </small>
+
+    </div>
+    
+
+</div>

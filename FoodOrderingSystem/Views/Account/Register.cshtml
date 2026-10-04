@@ -1,0 +1,513 @@
+﻿@model FoodOrderingSystem.Dto.RegisterViewModel
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+<div class="bg-light min-vh-100 d-flex align-items-center py-5">
+
+    <div class="container">
+
+        <div class="row justify-content-center">
+
+            <div class="col-xl-10 col-lg-11">
+
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+                    <div class="row g-0">
+
+                        <!-- =========================
+                             LEFT FOOD SECTION
+                        ========================== -->
+                        <div class="col-lg-5 d-none d-lg-flex">
+
+                            <div class="w-100 bg-dark text-white p-5 d-flex flex-column justify-content-center position-relative overflow-hidden">
+
+                                <!-- Background Image -->
+                                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=900&q=85"
+                                     class="position-absolute top-0 start-0 w-100 h-100"
+                                     style="object-fit:cover; opacity:.35;"
+                                     alt="Delicious Food">
+
+                                <!-- Dark Overlay -->
+                                <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark"
+                                     style="opacity:.55;">
+                                </div>
+
+
+                                <!-- Content -->
+                                <div class="position-relative">
+
+                                    <div class="mb-4">
+
+                                        <span class="badge bg-danger rounded-pill px-3 py-2">
+
+                                            <i class="bi bi-stars me-1"></i>
+                                            Fresh & Delicious
+
+                                        </span>
+
+                                    </div>
+
+
+                                    <h1 class="display-5 fw-bold mb-4">
+
+                                        Good Food.
+                                        <span class="text-danger">
+                                            Good Mood.
+                                        </span>
+
+                                    </h1>
+
+
+                                    <p class="lead text-white-50 mb-5">
+
+                                        Create your account and discover
+                                        delicious meals delivered straight
+                                        to your doorstep.
+
+                                    </p>
+
+
+                                    <!-- Benefits -->
+
+                                    <div class="d-flex align-items-center mb-4">
+
+                                        <div class="bg-danger rounded-circle
+                                            d-flex align-items-center
+                                            justify-content-center me-3"
+                                             style="width:50px;height:50px;">
+
+                                            <i class="bi bi-lightning-charge-fill"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <h6 class="fw-bold mb-0">
+                                                Fast Delivery
+                                            </h6>
+
+                                            <small class="text-white-50">
+                                                Hot food at your doorstep
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="d-flex align-items-center mb-4">
+
+                                        <div class="bg-danger rounded-circle
+                                            d-flex align-items-center
+                                            justify-content-center me-3"
+                                             style="width:50px;height:50px;">
+
+                                            <i class="bi bi-basket2-fill"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <h6 class="fw-bold mb-0">
+                                                Fresh Food
+                                            </h6>
+
+                                            <small class="text-white-50">
+                                                Prepared fresh for you
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="d-flex align-items-center">
+
+                                        <div class="bg-danger rounded-circle
+                                            d-flex align-items-center
+                                            justify-content-center me-3"
+                                             style="width:50px;height:50px;">
+
+                                            <i class="bi bi-shield-check"></i>
+
+                                        </div>
+
+                                        <div>
+
+                                            <h6 class="fw-bold mb-0">
+                                                Secure Ordering
+                                            </h6>
+
+                                            <small class="text-white-50">
+                                                Safe & secure checkout
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =========================
+                             REGISTER FORM
+                        ========================== -->
+                        <div class="col-lg-7">
+
+                            <div class="card-body p-4 p-md-5">
+
+                                <!-- Header -->
+                                <div class="text-center mb-4">
+
+                                    <div class="bg-danger bg-opacity-10
+                                        text-danger rounded-circle
+                                        d-flex align-items-center
+                                        justify-content-center
+                                        mx-auto mb-3"
+                                         style="width:65px;height:65px;">
+
+                                        <i class="bi bi-person-plus-fill fs-3"></i>
+
+                                    </div>
+
+                                    <h2 class="fw-bold mb-2">
+                                        Create Your Account
+                                    </h2>
+
+                                    <p class="text-muted">
+                                        Join us and start ordering your favorite food
+                                    </p>
+
+                                </div>
+
+
+                                <!-- Validation -->
+                                <form asp-action="Register" method="post">
+
+                                    <div asp-validation-summary="ModelOnly"
+                                         class="alert alert-danger"
+                                         role="alert">
+                                    </div>
+
+
+                                    <!-- Username -->
+                                    <div class="mb-3">
+
+                                        <label asp-for="Username"
+                                               class="form-label fw-semibold">
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-person text-danger"></i>
+                                            </span>
+
+                                            <input asp-for="Username"
+                                                   class="form-control"
+                                                   placeholder="Enter username" />
+
+                                        </div>
+
+                                        <span asp-validation-for="Username"
+                                              class="text-danger small">
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- Email -->
+                                    <div class="mb-3">
+
+                                        <label asp-for="Email"
+                                               class="form-label fw-semibold">
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-envelope text-danger"></i>
+                                            </span>
+
+                                            <input asp-for="Email"
+                                                   class="form-control"
+                                                   placeholder="Enter email address" />
+
+                                        </div>
+
+                                        <span asp-validation-for="Email"
+                                              class="text-danger small">
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- Full Name -->
+                                    <div class="mb-3">
+
+                                        <label asp-for="FullName"
+                                               class="form-label fw-semibold">
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-person-vcard text-danger"></i>
+                                            </span>
+
+                                            <input asp-for="FullName"
+                                                   class="form-control"
+                                                   placeholder="Enter your full name" />
+
+                                        </div>
+
+                                        <span asp-validation-for="FullName"
+                                              class="text-danger small">
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- Phone -->
+                                    <div class="mb-3">
+
+                                        <label asp-for="Phone"
+                                               class="form-label fw-semibold">
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-telephone text-danger"></i>
+                                            </span>
+
+                                            <input asp-for="Phone"
+                                                   class="form-control"
+                                                   placeholder="Enter phone number" />
+
+                                        </div>
+
+                                        <span asp-validation-for="Phone"
+                                              class="text-danger small">
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- Address -->
+                                    <div class="mb-3">
+
+                                        <label asp-for="Address"
+                                               class="form-label fw-semibold">
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text bg-light">
+                                                <i class="bi bi-geo-alt text-danger"></i>
+                                            </span>
+
+                                            <input asp-for="Address"
+                                                   class="form-control"
+                                                   placeholder="Enter delivery address" />
+
+                                        </div>
+
+                                        <span asp-validation-for="Address"
+                                              class="text-danger small">
+                                        </span>
+
+                                    </div>
+
+
+                                    <!-- Password + Confirm Password -->
+                                    <div class="row">
+
+                                        <!-- Password -->
+                                        <div class="col-md-6 mb-3">
+
+                                            <label asp-for="Password"
+                                                   class="form-label fw-semibold">
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <span class="input-group-text bg-light">
+                                                    <i class="bi bi-lock text-danger"></i>
+                                                </span>
+
+                                                <input asp-for="Password"
+                                                       type="password"
+                                                       class="form-control"
+                                                       id="password"
+                                                       placeholder="Password" />
+
+                                                <button type="button"
+                                                        class="btn btn-outline-secondary"
+                                                        onclick="togglePassword('password', 'passwordIcon')">
+
+                                                    <i id="passwordIcon"
+                                                       class="bi bi-eye">
+                                                    </i>
+
+                                                </button>
+
+                                            </div>
+
+                                            <span asp-validation-for="Password"
+                                                  class="text-danger small">
+                                            </span>
+
+                                        </div>
+
+
+                                        <!-- Confirm Password -->
+                                        <div class="col-md-6 mb-3">
+
+                                            <label asp-for="ConfirmPassword"
+                                                   class="form-label fw-semibold">
+                                            </label>
+
+                                            <div class="input-group">
+
+                                                <span class="input-group-text bg-light">
+                                                    <i class="bi bi-lock-fill text-danger"></i>
+                                                </span>
+
+                                                <input asp-for="ConfirmPassword"
+                                                       type="password"
+                                                       class="form-control"
+                                                       id="confirmPassword"
+                                                       placeholder="Confirm password" />
+
+                                                <button type="button"
+                                                        class="btn btn-outline-secondary"
+                                                        onclick="togglePassword('confirmPassword', 'confirmPasswordIcon')">
+
+                                                    <i id="confirmPasswordIcon"
+                                                       class="bi bi-eye">
+                                                    </i>
+
+                                                </button>
+
+                                            </div>
+
+                                            <span asp-validation-for="ConfirmPassword"
+                                                  class="text-danger small">
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- Terms -->
+                                    <div class="form-check mb-4">
+
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               id="terms"
+                                               required>
+
+                                        <label class="form-check-label small text-muted"
+                                               for="terms">
+
+                                            I agree to the
+                                            <a href="#"
+                                               class="text-danger text-decoration-none fw-semibold">
+                                                Terms & Conditions
+                                            </a>
+
+                                            and
+
+                                            <a href="#"
+                                               class="text-danger text-decoration-none fw-semibold">
+                                                Privacy Policy
+                                            </a>
+
+                                        </label>
+
+                                    </div>
+
+
+                                    <!-- Register Button -->
+                                    <button type="submit"
+                                            class="btn btn-danger btn-lg w-100 rounded-pill fw-semibold">
+
+                                        <i class="bi bi-person-plus me-2"></i>
+                                        Create Account
+
+                                    </button>
+
+
+                                    <!-- Login -->
+                                    <div class="text-center mt-4">
+
+                                        <span class="text-muted">
+                                            Already have an account?
+                                        </span>
+
+                                        <a asp-controller="Account"
+                                           asp-action="Login"
+                                           class="text-danger fw-bold text-decoration-none ms-1">
+
+                                            Login
+
+                                        </a>
+
+                                    </div>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     PASSWORD TOGGLE
+========================= -->
+<script>
+
+    function togglePassword(inputId, iconId) {
+
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+
+        if (input.type === "password") {
+
+            input.type = "text";
+
+            icon.classList.remove("bi-eye");
+            icon.classList.add("bi-eye-slash");
+
+        }
+        else {
+
+            input.type = "password";
+
+            icon.classList.remove("bi-eye-slash");
+            icon.classList.add("bi-eye");
+
+        }
+
+    }
+
+</script>

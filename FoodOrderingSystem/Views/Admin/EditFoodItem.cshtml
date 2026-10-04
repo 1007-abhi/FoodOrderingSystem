@@ -1,0 +1,112 @@
+﻿@model FoodItem
+@{
+    ViewData["Title"] = "Edit Food Item";
+    var categories = ViewBag.Categories as List<Category> ?? new List<Category>();
+}
+
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger">
+                    @TempData["Error"]
+                </div>
+            }
+
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0"><i class="bi bi-pencil-square"></i> Edit Food Item</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="EditFoodItem" method="post">
+                        <!-- IMPORTANT: Hidden Id field must be present -->
+                        <input type="hidden" asp-for="Id" />
+
+                        <!-- Show all validation errors -->
+                        <div asp-validation-summary="All" class="text-danger alert alert-danger" style="display:@(ViewData.ModelState.IsValid ? "none" : "block")"></div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label asp-for="Name" class="form-label">Item Name *</label>
+                                    <input asp-for="Name" class="form-control" required />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Description" class="form-label">Description</label>
+                                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label asp-for="Price" class="form-label">Price ($) *</label>
+                                            <input asp-for="Price" class="form-control" type="number" step="0.01" min="0.01" required />
+                                            <span asp-validation-for="Price" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label asp-for="CategoryId" class="form-label">Category *</label>
+                                            <select asp-for="CategoryId" class="form-select" required>
+                                                <option value="">-- Select Category --</option>
+                                                @foreach (var cat in categories)
+                                                {
+                                                    <option value="@cat.Id" selected="@(Model.CategoryId == cat.Id)">@cat.Name</option>
+                                                }
+                                            </select>
+                                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="ImageUrl" class="form-label">Image URL</label>
+                                    <input asp-for="ImageUrl" class="form-control" />
+                                </div>
+
+                                <div class="mb-3 form-check">
+                                    <input asp-for="IsAvailable" class="form-check-input" />
+                                    <label asp-for="IsAvailable" class="form-check-label">Available</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">Preview</div>
+                                    <div class="card-body text-center">
+                                        <img id="imagePreview" src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "/images/placeholder-food.jpg" : Model.ImageUrl)"
+                                             alt="Food Image" style="max-width: 100%; height: 150px; object-fit: cover;"
+                                             onerror="this.src='/images/placeholder-food.jpg'" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="d-flex justify-content-between">
+                            <a href="/Admin/ManageMenu" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back
+                            </a>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="bi bi-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.querySelector('input[name="ImageUrl"]').addEventListener('input', function (e) {
+            document.getElementById('imagePreview').src = e.target.value || '/images/placeholder-food.jpg';
+        });
+    </script>
+}
