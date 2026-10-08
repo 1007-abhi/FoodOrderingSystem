@@ -3,42 +3,55 @@
 }
 
 <div class="container py-5">
-    <!-- Page Heading -->
+
+    <!-- ========================================= -->
+    <!-- PAGE HEADER -->
+    <!-- ========================================= -->
+
     <div class="text-center mb-5">
+
         <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3">
             <i class="bi bi-bag-check-fill me-1"></i>
             Secure Checkout
         </span>
 
-        <h1 class="fw-bold mb-2">Complete Your Order</h1>
+        <h1 class="fw-bold mb-2">
+            Complete Your Order
+        </h1>
 
         <p class="text-muted mb-0">
-            Enter your delivery details and place your order
+            Enter your delivery details and choose your payment method
         </p>
+
     </div>
 
 
     <div class="row g-4 justify-content-center">
 
-        <!-- Delivery Details -->
+        <!-- ========================================= -->
+        <!-- LEFT SIDE - DELIVERY DETAILS -->
+        <!-- ========================================= -->
+
         <div class="col-lg-7">
 
-            <div class="card border-0 shadow-lg rounded-4 h-100">
+            <div class="card border-0 shadow-lg rounded-4">
 
+                <!-- Header -->
                 <div class="card-header bg-dark text-white p-4 rounded-top-4">
 
                     <div class="d-flex align-items-center">
 
                         <div class="bg-warning text-dark rounded-circle
-                            d-flex align-items-center justify-content-center
-                            me-3"
-                             style="width: 50px; height: 50px;">
+                            d-flex align-items-center
+                            justify-content-center me-3"
+                             style="width:50px;height:50px;">
 
                             <i class="bi bi-truck fs-4"></i>
 
                         </div>
 
                         <div>
+
                             <h4 class="mb-1 fw-bold">
                                 Delivery Details
                             </h4>
@@ -46,6 +59,7 @@
                             <small class="text-white-50">
                                 Where should we deliver your order?
                             </small>
+
                         </div>
 
                     </div>
@@ -53,88 +67,224 @@
                 </div>
 
 
+                <!-- Body -->
                 <div class="card-body p-4 p-md-5">
 
-                    <form action="/Order/Checkout" method="post">
+                    <form id="checkoutForm">
 
-                        <!-- Address -->
+                        @Html.AntiForgeryToken()
+
+
+                        <!-- ================================= -->
+                        <!-- DELIVERY ADDRESS -->
+                        <!-- ================================= -->
+
                         <div class="mb-4">
 
-                            <label class="form-label fw-semibold">
+                            <label for="deliveryAddress"
+                                   class="form-label fw-semibold">
+
                                 <i class="bi bi-geo-alt-fill text-danger me-2"></i>
+
                                 Delivery Address
+
                             </label>
 
-                            <textarea name="deliveryAddress"
+
+                            <textarea id="deliveryAddress"
+                                      name="deliveryAddress"
                                       class="form-control form-control-lg"
                                       rows="4"
+                                      maxlength="500"
                                       placeholder="Enter your complete delivery address..."
                                       required></textarea>
 
+
                             <div class="form-text">
+
                                 <i class="bi bi-info-circle me-1"></i>
+
                                 Please provide house number, street, area and city.
+
                             </div>
 
                         </div>
 
 
-                        <!-- Phone -->
+                        <!-- ================================= -->
+                        <!-- PHONE NUMBER -->
+                        <!-- ================================= -->
+
                         <div class="mb-4">
 
-                            <label class="form-label fw-semibold">
+                            <label for="phoneNumber"
+                                   class="form-label fw-semibold">
+
                                 <i class="bi bi-telephone-fill text-success me-2"></i>
+
                                 Phone Number
+
                             </label>
+
 
                             <input type="tel"
+                                   id="phoneNumber"
                                    name="phoneNumber"
                                    class="form-control form-control-lg"
-                                   placeholder="Enter your phone number"
+                                   placeholder="Enter 10 digit phone number"
                                    autocomplete="tel"
+                                   maxlength="10"
+                                   pattern="[0-9]{10}"
+                                   inputmode="numeric"
                                    required />
 
+
                             <div class="form-text">
+
+                                <i class="bi bi-info-circle me-1"></i>
+
                                 We'll use this number to contact you regarding your delivery.
+
                             </div>
 
                         </div>
 
 
-                        <!-- Payment Method -->
+                        <!-- ================================= -->
+                        <!-- PAYMENT METHOD -->
+                        <!-- ================================= -->
+
                         <div class="mb-4">
 
                             <label class="form-label fw-semibold">
+
                                 <i class="bi bi-wallet2 text-primary me-2"></i>
+
                                 Payment Method
+
                             </label>
 
-                            <div class="card border rounded-3">
 
-                                <div class="card-body d-flex align-items-center">
+                            <!-- ============================== -->
+                            <!-- CASH ON DELIVERY -->
+                            <!-- ============================== -->
 
-                                    <div class="bg-success-subtle text-success rounded-3
-                                        d-flex align-items-center justify-content-center
-                                        me-3"
-                                         style="width: 45px; height: 45px;">
+                            <div class="payment-option
+                                border rounded-3
+                                p-3 mb-3">
 
-                                        <i class="bi bi-cash-coin fs-4"></i>
+                                <div class="form-check">
 
-                                    </div>
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="paymentMethod"
+                                           id="cod"
+                                           value="COD"
+                                           checked />
 
-                                    <div class="flex-grow-1">
 
-                                        <h6 class="mb-1 fw-bold">
-                                            Cash on Delivery
-                                        </h6>
+                                    <label class="form-check-label w-100"
+                                           for="cod">
 
-                                        <small class="text-muted">
-                                            Pay when your food arrives
-                                        </small>
+                                        <div class="d-flex align-items-center">
 
-                                    </div>
+                                            <div class="bg-success-subtle text-success
+                                                rounded-3
+                                                d-flex align-items-center
+                                                justify-content-center
+                                                me-3"
+                                                 style="width:45px;height:45px;">
 
-                                    <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                                                <i class="bi bi-cash-coin fs-4"></i>
+
+                                            </div>
+
+
+                                            <div>
+
+                                                <h6 class="mb-1 fw-bold">
+
+                                                    Cash on Delivery
+
+                                                </h6>
+
+                                                <small class="text-muted">
+
+                                                    Pay when your food arrives
+
+                                                </small>
+
+                                            </div>
+
+                                        </div>
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ============================== -->
+                            <!-- RAZORPAY -->
+                            <!-- ============================== -->
+
+                            <div class="payment-option
+                                border rounded-3
+                                p-3">
+
+                                <div class="form-check">
+
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="paymentMethod"
+                                           id="razorpay"
+                                           value="Razorpay" />
+
+
+                                    <label class="form-check-label w-100"
+                                           for="razorpay">
+
+                                        <div class="d-flex align-items-center">
+
+                                            <div class="bg-primary-subtle text-primary
+                                                rounded-3
+                                                d-flex align-items-center
+                                                justify-content-center
+                                                me-3"
+                                                 style="width:45px;height:45px;">
+
+                                                <i class="bi bi-credit-card fs-4"></i>
+
+                                            </div>
+
+
+                                            <div class="flex-grow-1">
+
+                                                <h6 class="mb-1 fw-bold">
+
+                                                    Online Payment
+
+                                                </h6>
+
+                                                <small class="text-muted">
+
+                                                    UPI, Card, Net Banking & Wallets
+
+                                                </small>
+
+                                            </div>
+
+
+                                            <span class="badge bg-primary-subtle text-primary">
+
+                                                Razorpay
+
+                                            </span>
+
+                                        </div>
+
+                                    </label>
 
                                 </div>
 
@@ -143,13 +293,17 @@
                         </div>
 
 
-                        <!-- Terms -->
+                        <!-- ================================= -->
+                        <!-- TERMS -->
+                        <!-- ================================= -->
+
                         <div class="form-check mb-4">
 
                             <input class="form-check-input"
                                    type="checkbox"
                                    id="terms"
                                    required />
+
 
                             <label class="form-check-label small text-muted"
                                    for="terms">
@@ -162,14 +316,31 @@
                         </div>
 
 
-                        <!-- Place Order -->
+                        <!-- ================================= -->
+                        <!-- PLACE ORDER BUTTON -->
+                        <!-- ================================= -->
+
                         <button type="submit"
+                                id="placeOrderBtn"
                                 class="btn btn-primary btn-lg w-100 fw-bold py-3">
 
                             <i class="bi bi-check-circle-fill me-2"></i>
+
                             Place Order
 
                         </button>
+
+
+                        <!-- Processing Message -->
+
+                        <div id="processingMessage"
+                             class="text-center text-muted small mt-3 d-none">
+
+                            <span class="spinner-border spinner-border-sm me-2"></span>
+
+                            Please wait, processing your order...
+
+                        </div>
 
                     </form>
 
@@ -180,10 +351,16 @@
         </div>
 
 
-        <!-- Order Summary -->
+        <!-- ========================================= -->
+        <!-- RIGHT SIDE - ORDER SUMMARY -->
+        <!-- ========================================= -->
+
         <div class="col-lg-5">
 
             <div class="card border-0 shadow-lg rounded-4">
+
+
+                <!-- Header -->
 
                 <div class="card-header bg-primary text-white p-4 rounded-top-4">
 
@@ -192,6 +369,7 @@
                         <i class="bi bi-receipt-cutoff fs-3 me-3"></i>
 
                         <div>
+
                             <h4 class="mb-0 fw-bold">
                                 Order Summary
                             </h4>
@@ -199,6 +377,7 @@
                             <small class="text-white-50">
                                 Your order total
                             </small>
+
                         </div>
 
                     </div>
@@ -206,22 +385,35 @@
                 </div>
 
 
+                <!-- Body -->
+
                 <div class="card-body p-4">
 
-                    <!-- Total -->
+
+                    <!-- TOTAL -->
+
                     <div class="text-center py-4">
 
                         <div class="text-muted small mb-2">
+
                             TOTAL AMOUNT
+
                         </div>
 
+
                         <h1 class="display-5 fw-bold text-primary mb-0">
-                            $@ViewBag.Total
+
+                            ₹@ViewBag.Total
+
                         </h1>
 
+
                         <span class="badge bg-success-subtle text-success mt-2">
+
                             <i class="bi bi-check-circle me-1"></i>
+
                             Ready to Order
+
                         </span>
 
                     </div>
@@ -230,44 +422,68 @@
                     <hr />
 
 
-                    <!-- Summary Items -->
+                    <!-- FOOD ITEMS -->
+
                     <div class="d-flex justify-content-between mb-3">
 
                         <span class="text-muted">
+
                             <i class="bi bi-basket me-2"></i>
+
                             Food Items
+
                         </span>
 
+
                         <span class="fw-semibold">
+
                             Included
+
                         </span>
 
                     </div>
 
 
+                    <!-- DELIVERY -->
+
                     <div class="d-flex justify-content-between mb-3">
 
                         <span class="text-muted">
+
                             <i class="bi bi-truck me-2"></i>
+
                             Delivery
+
                         </span>
+
 
                         <span class="text-success fw-semibold">
-                            Included
+
+                            Free
+
                         </span>
 
                     </div>
 
 
+                    <!-- PAYMENT -->
+
                     <div class="d-flex justify-content-between mb-3">
 
                         <span class="text-muted">
+
                             <i class="bi bi-wallet2 me-2"></i>
+
                             Payment
+
                         </span>
 
-                        <span class="fw-semibold">
+
+                        <span id="paymentSummary"
+                              class="fw-semibold">
+
                             Cash on Delivery
+
                         </span>
 
                     </div>
@@ -276,15 +492,21 @@
                     <hr />
 
 
-                    <!-- Final Total -->
+                    <!-- FINAL TOTAL -->
+
                     <div class="d-flex justify-content-between align-items-center">
 
                         <span class="fw-bold fs-5">
+
                             Total
+
                         </span>
 
+
                         <span class="fw-bold fs-4 text-primary">
-                            $@ViewBag.Total
+
+                            ₹@ViewBag.Total
+
                         </span>
 
                     </div>
@@ -294,24 +516,35 @@
             </div>
 
 
-            <!-- Security Card -->
+            <!-- ================================= -->
+            <!-- SECURITY CARD -->
+            <!-- ================================= -->
+
             <div class="card border-0 bg-light rounded-4 mt-4">
 
                 <div class="card-body p-4">
 
                     <div class="d-flex">
 
-                        <i class="bi bi-shield-check-fill text-success fs-3 me-3"></i>
+                        <i class="bi bi-shield-check-fill
+                        text-success fs-3 me-3"></i>
+
 
                         <div>
 
                             <h6 class="fw-bold mb-1">
-                                Safe & Secure
+
+                                Safe & Secure Payment
+
                             </h6>
 
+
                             <p class="text-muted small mb-0">
-                                Your personal information is kept secure
-                                and is only used to process your order.
+
+                                Your payment information is securely
+                                processed by Razorpay. We never store
+                                your card or UPI details.
+
                             </p>
 
                         </div>
@@ -322,9 +555,761 @@
 
             </div>
 
+
+            <!-- ================================= -->
+            <!-- PAYMENT METHODS -->
+            <!-- ================================= -->
+
+            <div class="text-center mt-3">
+
+                <small class="text-muted">
+
+                    <i class="bi bi-credit-card me-1"></i>
+                    Cards
+
+                    <span class="mx-1">•</span>
+
+                    <i class="bi bi-phone me-1"></i>
+                    UPI
+
+                    <span class="mx-1">•</span>
+
+                    <i class="bi bi-bank me-1"></i>
+                    Net Banking
+
+                </small>
+
+            </div>
+
         </div>
 
     </div>
-    
 
 </div>
+
+
+<!-- ========================================================= -->
+<!-- RAZORPAY CHECKOUT -->
+<!-- ========================================================= -->
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+<script>
+
+    // =========================================================
+    // ELEMENTS
+    // =========================================================
+
+    const checkoutForm =
+        document.getElementById("checkoutForm");
+
+    const placeOrderBtn =
+        document.getElementById("placeOrderBtn");
+
+    const processingMessage =
+        document.getElementById("processingMessage");
+
+    const paymentSummary =
+        document.getElementById("paymentSummary");
+
+    const deliveryAddress =
+        document.getElementById("deliveryAddress");
+
+    const phoneNumber =
+        document.getElementById("phoneNumber");
+
+
+    // =========================================================
+    // CSRF TOKEN
+    // =========================================================
+
+    const antiForgeryToken =
+        document.querySelector(
+            'input[name="__RequestVerificationToken"]'
+        ).value;
+
+
+    // =========================================================
+    // PAYMENT METHOD CHANGE
+    // =========================================================
+
+    document
+        .querySelectorAll(
+            'input[name="paymentMethod"]'
+        )
+        .forEach(function (radio) {
+
+            radio.addEventListener(
+                "change",
+                function () {
+
+                    if (this.value === "Razorpay") {
+
+                        paymentSummary.innerText =
+                            "Online Payment";
+
+                    }
+                    else {
+
+                        paymentSummary.innerText =
+                            "Cash on Delivery";
+
+                    }
+
+                }
+            );
+
+        });
+
+
+    // =========================================================
+    // FORM SUBMIT
+    // =========================================================
+
+    checkoutForm.addEventListener(
+        "submit",
+        function (e) {
+
+            e.preventDefault();
+
+
+            // Browser validation
+            if (!checkoutForm.checkValidity()) {
+
+                checkoutForm.reportValidity();
+
+                return;
+            }
+
+
+            const address =
+                deliveryAddress.value.trim();
+
+
+            const phone =
+                phoneNumber.value.trim();
+
+
+            const paymentMethod =
+                document.querySelector(
+                    'input[name="paymentMethod"]:checked'
+                ).value;
+
+
+            // =============================================
+            // ADDRESS VALIDATION
+            // =============================================
+
+            if (address.length < 10) {
+
+                alert(
+                    "Please enter a complete delivery address."
+                );
+
+                deliveryAddress.focus();
+
+                return;
+            }
+
+
+            // =============================================
+            // PHONE VALIDATION
+            // =============================================
+
+            if (!/^[0-9]{10}$/.test(phone)) {
+
+                alert(
+                    "Please enter a valid 10 digit phone number."
+                );
+
+                phoneNumber.focus();
+
+                return;
+            }
+
+
+            // =============================================
+            // DISABLE BUTTON
+            // =============================================
+
+            setProcessing(true);
+
+
+            // =============================================
+            // COD
+            // =============================================
+
+            if (paymentMethod === "COD") {
+
+                placeCashOnDeliveryOrder(
+                    address,
+                    phone
+                );
+
+                return;
+            }
+
+
+            // =============================================
+            // RAZORPAY
+            // =============================================
+
+            createRazorpayOrder(
+                address,
+                phone
+            );
+
+        }
+    );
+
+
+    // =========================================================
+    // CREATE RAZORPAY ORDER
+    // =========================================================
+
+    function createRazorpayOrder(
+        address,
+        phone
+    ) {
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "deliveryAddress",
+            address
+        );
+
+
+        formData.append(
+            "phoneNumber",
+            phone
+        );
+
+
+        formData.append(
+            "__RequestVerificationToken",
+            antiForgeryToken
+        );
+
+
+        fetch(
+            "/Order/CreateRazorpayOrder",
+            {
+                method: "POST",
+
+                body: formData,
+
+                headers: {
+                    "RequestVerificationToken":
+                        antiForgeryToken
+                }
+            }
+        )
+
+            .then(function (response) {
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Server returned an error."
+                    );
+
+                }
+
+                return response.json();
+
+            })
+
+            .then(function (data) {
+
+                if (!data.success) {
+
+                    alert(
+                        data.message ||
+                        "Unable to create payment."
+                    );
+
+                    resetButton();
+
+                    return;
+                }
+
+
+                // =========================================
+                // RAZORPAY OPTIONS
+                // =========================================
+
+                const options = {
+
+                    key: data.key,
+
+                    amount: data.amount,
+
+                    currency: data.currency,
+
+                    name: data.name,
+
+                    description:
+                        data.description,
+
+                    order_id:
+                        data.orderId,
+
+
+                    // =====================================
+                    // CUSTOMER DETAILS
+                    // =====================================
+
+                    prefill: {
+
+                        name:
+                            data.customerName || "",
+
+                        contact:
+                            phone
+
+                    },
+
+
+                    // =====================================
+                    // THEME
+                    // =====================================
+
+                    theme: {
+
+                        color: "#0d6efd"
+
+                    },
+
+
+                    // =====================================
+                    // PAYMENT SUCCESS
+                    // =====================================
+
+                    handler:
+                        function (response) {
+
+                            verifyPayment(
+                                response,
+                                address,
+                                phone
+                            );
+
+                        },
+
+
+                    // =====================================
+                    // MODAL
+                    // =====================================
+
+                    modal: {
+
+                        ondismiss:
+                            function () {
+
+                                resetButton();
+
+                            }
+
+                    }
+
+                };
+
+
+                // =========================================
+                // CREATE RAZORPAY INSTANCE
+                // =========================================
+
+                const razorpay =
+                    new Razorpay(options);
+
+
+                // =========================================
+                // PAYMENT FAILED
+                // =========================================
+
+                razorpay.on(
+                    "payment.failed",
+                    function (response) {
+
+                        console.error(
+                            "Razorpay payment failed:",
+                            response
+                        );
+
+
+                        let message =
+                            "Payment failed. Please try again.";
+
+
+                        if (
+                            response &&
+                            response.error &&
+                            response.error.description
+                        ) {
+
+                            message =
+                                response.error.description;
+
+                        }
+
+
+                        alert(message);
+
+
+                        resetButton();
+
+                    }
+                );
+
+
+                // =========================================
+                // OPEN RAZORPAY
+                // =========================================
+
+                razorpay.open();
+
+            })
+
+            .catch(function (error) {
+
+                console.error(
+                    "Razorpay Error:",
+                    error
+                );
+
+
+                alert(
+                    "Something went wrong while starting the online payment."
+                );
+
+
+                resetButton();
+
+            });
+
+    }
+
+
+    // =========================================================
+    // VERIFY PAYMENT
+    // =========================================================
+
+    function verifyPayment(
+        response,
+        address,
+        phone
+    ) {
+
+        // Make sure Razorpay returned everything
+        if (
+            !response ||
+            !response.razorpay_order_id ||
+            !response.razorpay_payment_id ||
+            !response.razorpay_signature
+        ) {
+
+            alert(
+                "Invalid payment response received."
+            );
+
+            resetButton();
+
+            return;
+        }
+
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "razorpay_order_id",
+            response.razorpay_order_id
+        );
+
+
+        formData.append(
+            "razorpay_payment_id",
+            response.razorpay_payment_id
+        );
+
+
+        formData.append(
+            "razorpay_signature",
+            response.razorpay_signature
+        );
+
+
+        formData.append(
+            "deliveryAddress",
+            address
+        );
+
+
+        formData.append(
+            "phoneNumber",
+            phone
+        );
+
+
+        formData.append(
+            "__RequestVerificationToken",
+            antiForgeryToken
+        );
+
+
+        fetch(
+            "/Order/VerifyRazorpayPayment",
+            {
+                method: "POST",
+
+                body: formData,
+
+                headers: {
+                    "RequestVerificationToken":
+                        antiForgeryToken
+                }
+            }
+        )
+
+            .then(function (response) {
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Payment verification request failed."
+                    );
+
+                }
+
+                return response.json();
+
+            })
+
+            .then(function (data) {
+
+                if (data.success) {
+
+                    // =====================================
+                    // PAYMENT VERIFIED
+                    // =====================================
+
+                    window.location.href =
+                        "/Order/OrderConfirmation?orderId="
+                        + data.orderId;
+
+                }
+                else {
+
+                    alert(
+                        data.message ||
+                        "Payment verification failed."
+                    );
+
+
+                    resetButton();
+
+                }
+
+            })
+
+            .catch(function (error) {
+
+                console.error(
+                    "Verification Error:",
+                    error
+                );
+
+
+                alert(
+                    "Unable to verify your payment. Please contact support if money was deducted."
+                );
+
+
+                resetButton();
+
+            });
+
+    }
+
+
+    // =========================================================
+    // CASH ON DELIVERY
+    // =========================================================
+
+    function placeCashOnDeliveryOrder(
+        address,
+        phone
+    ) {
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "deliveryAddress",
+            address
+        );
+
+
+        formData.append(
+            "phoneNumber",
+            phone
+        );
+
+
+        formData.append(
+            "__RequestVerificationToken",
+            antiForgeryToken
+        );
+
+
+        fetch(
+            "/Order/PlaceCODOrder",
+            {
+                method: "POST",
+
+                body: formData,
+
+                headers: {
+                    "RequestVerificationToken":
+                        antiForgeryToken
+                }
+            }
+        )
+
+            .then(function (response) {
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to place order."
+                    );
+
+                }
+
+                return response.json();
+
+            })
+
+            .then(function (data) {
+
+                if (data.success) {
+
+                    window.location.href =
+                        "/Order/OrderConfirmation?orderId="
+                        + data.orderId;
+
+                }
+                else {
+
+                    alert(
+                        data.message ||
+                        "Unable to place order."
+                    );
+
+
+                    resetButton();
+
+                }
+
+            })
+
+            .catch(function (error) {
+
+                console.error(
+                    "COD Error:",
+                    error
+                );
+
+
+                alert(
+                    "Unable to place your order. Please try again."
+                );
+
+
+                resetButton();
+
+            });
+
+    }
+
+
+    // =========================================================
+    // PROCESSING STATE
+    // =========================================================
+
+    function setProcessing(isProcessing) {
+
+        placeOrderBtn.disabled =
+            isProcessing;
+
+
+        if (isProcessing) {
+
+            placeOrderBtn.innerHTML =
+                '<span class="spinner-border spinner-border-sm me-2"></span>' +
+                'Processing...';
+
+
+            processingMessage.classList.remove(
+                "d-none"
+            );
+
+        }
+        else {
+
+            placeOrderBtn.innerHTML =
+                '<i class="bi bi-check-circle-fill me-2"></i>' +
+                'Place Order';
+
+
+            processingMessage.classList.add(
+                "d-none"
+            );
+
+        }
+
+    }
+
+
+    // =========================================================
+    // RESET BUTTON
+    // =========================================================
+
+    function resetButton() {
+
+        setProcessing(false);
+
+    }
+
+</script>
+
+
+<!-- ========================================================= -->
+<!-- PAYMENT OPTION STYLE -->
+<!-- ========================================================= -->
+
+<style>
+
+    .payment-option {
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+        .payment-option:hover {
+            border-color: #0d6efd !important;
+            background-color: rgba(13, 110, 253, 0.03);
+        }
+
+        .payment-option:has(input:checked) {
+            border-color: #0d6efd !important;
+            background-color: rgba(13, 110, 253, 0.05);
+            box-shadow: 0 0 0 1px rgba(13, 110, 253, 0.15);
+        }
+
+</style>
